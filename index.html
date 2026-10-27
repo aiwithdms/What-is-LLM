@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside the Brain of AI | LLM Explained</title>
+<style>
+:root {
+  --bg:#07101f;
+  --panel:#101e32;
+  --gold:#ffc65c;
+  --blue:#61d5ff;
+  --text:#f5f8ff;
+  --muted:#bdc9da;
+  --red:#ff8585;
+  --green:#83e0a0;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Segoe UI,Arial,sans-serif;
+  line-height:1.65;
+}
+a { color:var(--blue); }
+.hero {
+  min-height:92vh;
+  padding:70px 6%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at 15% 45%,#9c621e44,transparent 40%),
+    radial-gradient(ellipse at 85% 40%,#0878c955,transparent 40%),
+    #050b16;
+}
+.wrap { width:100%;max-width:1250px;margin:auto; }
+.eyebrow {
+  text-transform:uppercase;
+  letter-spacing:4px;
+  color:var(--blue);
+  font-size:.8rem;
+}
+h1 {
+  font-size:clamp(2.7rem,7vw,6rem);
+  line-height:1.05;
+  margin:22px 0;
+}
+.gold { color:var(--gold); }
+.blue { color:var(--blue); }
+.lead {
+  max-width:850px;
+  margin:0 auto 30px;
+  color:var(--muted);
+  font-size:1.2rem;
+}
+.brain {
+  margin:35px auto;
+  padding:35px 15px;
+  max-width:1000px;
+  border:1px solid #61d5ff55;
+  border-radius:24px;
+  background:
+    radial-gradient(circle,#1479b733,transparent 50%),
+    linear-gradient(120deg,#251b1b,#0b1a30,#051321);
+  box-shadow:0 0 65px #0878c922;
+}
+.brain-symbol {
+  font-size:5rem;
+  animation:pulse 3s infinite;
+}
+@keyframes pulse {
+  50% { transform:scale(1.08);text-shadow:0 0 35px var(--blue); }
+}
+.tokens {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+.token {
+  padding:8px 16px;
+  border:1px solid #ffffff35;
+  border-radius:30px;
+  background:#07101f;
+}
+section {
+  max-width:1400px;
+  margin:auto;
+  padding:75px 6%;
+}
+.label {
+  color:var(--blue);
+  text-transform:uppercase;
+  letter-spacing:3px;
+  font-size:.8rem;
+}
+h2 {
+  font-size:clamp(2rem,4vw,3.5rem);
+  line-height:1.15;
+  margin:12px 0 20px;
+}
+.intro {
+  color:var(--muted);
+  max-width:950px;
+  font-size:1.1rem;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  margin-top:30px;
+}
+.card {
+  background:linear-gradient(145deg,#12223a,#0a1423);
+  border:1px solid #ffffff20;
+  border-radius:18px;
+  padding:25px;
+}
+.card h3 { margin-top:0; }
+.card p { color:var(--muted); }
+.goldline { border-top:3px solid var(--gold); }
+.blueline { border-top:3px solid var(--blue); }
+.redline { border-top:3px solid var(--red); }
+.greenline { border-top:3px solid var(--green); }
+.diagram {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:16px;
+  align-items:stretch;
+  margin-top:30px;
+}
+.node {
+  padding:25px 15px;
+  text-align:center;
+  background:#10213a;
+  border:1px solid #61d5ff70;
+  border-radius:16px;
+}
+.node strong {
+  display:block;
+  color:var(--blue);
+  font-size:1.15rem;
+  margin-bottom:8px;
+}
+.node .symbol { font-size:2rem; }
+.arrow {
+  color:var(--gold);
+  font-size:2rem;
+  text-align:center;
+  align-self:center;
+}
+.button {
+  border:0;
+  padding:12px 19px;
+  border-radius:30px;
+  background:var(--gold);
+  color:#101827;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:1rem;
+  margin:8px 5px 8px 0;
+}
+.button.secondary {
+  background:#173453;
+  border:1px solid #61d5ff77;
+  color:var(--text);
+}
+.result {
+  padding:18px;
+  margin-top:18px;
+  border-radius:12px;
+  background:#ffffff09;
+  border:1px solid #ffffff20;
+  min-height:65px;
+}
+input {
+  width:100%;
+  max-width:500px;
+  padding:13px;
+  border-radius:10px;
+  border:1px solid #61d5ff88;
+  background:#07101f;
+  color:white;
+  font-size:1rem;
+}
+.demo-prompt {
+  background:#0a192a;
+  border:1px solid #ffffff25;
+  border-radius:16px;
+  padding:24px;
+  margin-top:24px;
+  color:#e6eef9;
+}
+.poster {
+  display:block;
+  width:100%;
+  max-width:1000px;
+  margin:35px auto;
+  border-radius:18px;
+  border:1px solid #ffffff30;
+}
+footer {
+  padding:35px;
+  text-align:center;
+  color:#899bb4;
+  border-top:1px solid #ffffff15;
+}
+@media(max-width:800px) {
+  .grid { grid-template-columns:1fr; }
+  .diagram { grid-template-columns:1fr; }
+  .arrow { transform:rotate(90deg); }
+  section { padding:55px 5%; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+<div class="wrap">
+  <div class="eyebrow">Enterprise AI Awareness · Level 1</div>
+  <h1>Inside the <span class="gold">Brain</span><br>of <span class="blue">AI</span></h1>
+  <p class="lead">
+    Large Language Models explained through a cinematic journey
+    from a human question to an AI-generated answer.
+  </p>
+  <div class="brain">
+    <div class="brain-symbol">🧠</div>
+    <h2>A Large Language Model</h2>
+    <p class="lead">
+      Learns patterns in language and generates responses
+      by predicting likely next tokens.
+    </p>
+    <div class="tokens">
+      <span class="token">Training Data</span>
+      <span class="token">Patterns</span>
+      <span class="token">Prompt</span>
+      <span class="token">Prediction</span>
+      <span class="token">Output</span>
+    </div>
+  </div>
+  <p>Scroll down to explore what happens behind the screen ↓</p>
+</div>
+</header>
+
+<section>
+  <div class="label">01 · Understand the name</div>
+  <h2>What does <span class="blue">LLM</span> mean?</h2>
+  <div class="grid">
+    <article class="card goldline">
+      <h3 class="gold">L — Large</h3>
+      <p>Large-scale training data, model parameters and computing resources help the model learn complex patterns.</p>
+    </article>
+    <article class="card blueline">
+      <h3 class="blue">L — Language</h3>
+      <p>The model is designed to process and generate language. Some modern models also work with images, audio and other inputs.</p>
+    </article>
+    <article class="card goldline">
+      <h3 class="gold">M — Model</h3>
+      <p>A mathematical system whose parameters are adjusted during training to learn patterns from data.</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="label">02 · The journey</div>
+  <h2>From a prompt to an answer</h2>
+  <p class="intro">
+    Imagine asking an AI assistant: "Explain artificial intelligence
+    to a beginner." Follow the journey.
+  </p>
+  <div class="diagram">
+    <div class="node">
+      <div class="symbol">⌨️</div>
+      <strong>1. Prompt</strong>
+      Your question, instructions and context.
+    </div>
+    <div class="arrow">→</div>
+    <div class="node">
+      <div class="symbol">🧠</div>
+      <strong>2. Trained Model</strong>
+      Learned parameters process the input.
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node">
+      <div class="symbol">⚙️</div>
+      <strong>3. Transformer</strong>
+      Attention helps relate relevant parts of the input.
+    </div>
+    <div class="arrow">→</div>
+    <div class="node">
+      <div class="symbol">💬</div>
+      <strong>4. Output</strong>
+      The model generates a response token by token.
+    </div>
+  </div>
+  <div class="demo-prompt">
+    <strong class="gold">Trainer explanation</strong>
+    <p>
+      "The model was trained before we opened the chat. When we
+      provide a prompt, the model uses what it learned to generate
+      a response. It is not simply looking up a ready-made answer
+      in a giant database."
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="label">03 · Try the concept</div>
+  <h2>Can you predict the <span class="gold">next word?</span></h2>
+  <p class="intro">
+    Humans use language experience and context to anticipate what
+    comes next. An LLM predicts likely next tokens using learned
+    statistical patterns.
+  </p>
+  <div class="card blueline">
+    <h3>Complete the sentence</h3>
+    <p style="font-size:1.5rem;color:white">
+      The sun rises in the...
+    </p>
+    <button class="button" onclick="showPrediction('east')">East</button>
+    <button class="button secondary" onclick="showPrediction('west')">West</button>
+    <button class="button secondary" onclick="showPrediction('ocean')">Ocean</button>
+    <div id="prediction" class="result" aria-live="polite">
+      Choose an answer to reveal the explanation.
+    </div>
+  </div>
+  <p class="intro">
+    This is an analogy, not a claim that human brains and AI models
+    work in the same way. LLMs predict tokens, which may be words,
+    parts of words, or punctuation.
+  </p>
+</section>
+
+<section>
+  <div class="label">04 · What can LLMs do?</div>
+  <h2>Strengths and limitations</h2>
+  <div class="grid">
+    <article class="card greenline">
+      <h3 class="green">✓ Summarization</h3>
+      <p>Turn a long report into a concise summary or a list of key points.</p>
+      <h3>✓ Drafting</h3>
+      <p>Create a first draft of an email, proposal, or code.</p>
+      <h3>✓ Question answering</h3>
+      <p>Explain complex topics in simpler language.</p>
+    </article>
+    <article class="card redline">
+      <h3 style="color:var(--red)">! Hallucinations</h3>
+      <p>May produce plausible-sounding but false information.</p>
+      <h3 style="color:var(--red)">! Knowledge freshness</h3>
+      <p>May lack recent information unless suitable tools or updated data are available.</p>
+      <h3 style="color:var(--red)">! Context window</h3>
+      <p>Has limits on how much input and conversation can be processed at once.</p>
+    </article>
+    <article class="card goldline">
+      <h3 class="gold">Human responsibility</h3>
+      <p>Check facts, calculations, sources, confidentiality, and suitability before using AI output in important work.</p>
+      <p><strong>Remember:</strong> Fluent language does not guarantee truth.</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="label">05 · Live demonstration</div>
+  <h2>Watch an LLM explain itself</h2>
+  <p class="intro">
+    Open ChatGPT and use the prompt below. Compare its explanation
+    with the concepts you have just learned.
+  </p>
+  <div class="demo-prompt">
+    <p id="promptText">
+      Explain a Large Language Model to a 12-year-old using a simple
+      real-life analogy. Then give one example of its strength and
+      one example of its limitation.
+    </p>
+    <button class="button" onclick="copyPrompt()">Copy demonstration prompt</button>
+    <a class="button secondary" href="https://chatgpt.com/" target="_blank" rel="noopener">Open ChatGPT ↗</a>
+    <div id="copyStatus" aria-live="polite"></div>
+  </div>
+  <div class="card" style="margin-top:25px">
+    <h3>Ask the participants</h3>
+    <ol>
+      <li>How did the AI simplify the explanation?</li>
+      <li>Did the response match the instruction?</li>
+      <li>Should we automatically trust everything it says?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="label">06 · The big takeaway</div>
+  <h2>AI generates.<br><span class="gold">Humans guide.</span></h2>
+  <p class="intro">
+    LLMs are powerful tools for generating and working with language.
+    Understanding their strengths and limitations helps us use them
+    more responsibly in the enterprise.
+  </p>
+  <div class="brain">
+    <h2>From LLMs to Generative AI</h2>
+    <p class="lead">
+      LLMs focus on language, while Generative AI also includes
+      systems that create images, audio, video and other content.
+    </p>
+    <a class="button" href="https://gemini.google.com/" target="_blank" rel="noopener">Explore Gemini ↗</a>
+    <a class="button secondary" href="https://copilot.microsoft.com/" target="_blank" rel="noopener">Explore Copilot ↗</a>
+  </div>
+</section>
+
+<footer>
+  Enterprise AI Awareness Program · Level 1 · Cohort 7<br>
+  Learn with curiosity. Use AI thoughtfully. Keep humans accountable.
+</footer>
+
+<script>
+function showPrediction(answer) {
+  const result = document.getElementById("prediction");
+  if (answer === "east") {
+    result.innerHTML =
+      "<strong style='color:#83e0a0'>Correct!</strong> " +
+      "In ordinary context, 'east' is the expected completion. " +
+      "An LLM also uses context and learned patterns to estimate " +
+      "likely next tokens. It does not always choose the same token.";
+  } else {
+    result.innerHTML =
+      "That is possible in other contexts, but 'east' is the usual " +
+      "completion here. The likely next token depends on context, " +
+      "the model, and its generation settings.";
+  }
+}
+function copyPrompt() {
+  const text = document.getElementById("promptText").innerText;
+  const status = document.getElementById("copyStatus");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      status.textContent = "Prompt copied!";
+    }).catch(() => fallbackCopy(text, status));
+  } else {
+    fallbackCopy(text, status);
+  }
+}
+function fallbackCopy(text, status) {
+  const field = document.createElement("textarea");
+  field.value = text;
+  document.body.appendChild(field);
+  field.select();
+  try {
+    document.execCommand("copy");
+    status.textContent = "Prompt copied!";
+  } catch (e) {
+    status.textContent = "Please select and copy the prompt manually.";
+  }
+  field.remove();
+}
+</script>
+</body>
+</html>
